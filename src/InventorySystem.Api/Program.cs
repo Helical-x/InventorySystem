@@ -36,7 +36,9 @@ else
 // Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("inventory", policy => 
+        policy.RequireRole("Api.ReadOnly", "Api.ReadWrite"));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -53,31 +55,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var scopeRequiredByApi = app.Configuration["AzureAd:Scopes"] ?? "";
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-    {
-        httpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
-
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi()
-    .RequireAuthorization();
-
-
 app.MapGet("/products", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
     var products = await dbContext.Products
@@ -87,11 +64,47 @@ app.MapGet("/products", async (ApplicationDbContext dbContext, int pageNumber = 
     return products;
 }).WithOpenApi();
 
+
 app.MapPost("/products", async (ApplicationDbContext dbContext, Product product) =>
 {
     dbContext.Products.Add(product);
     await dbContext.SaveChangesAsync();
     return Results.Created($"/products/{product.ProductId}", product);
+}).WithOpenApi();
+
+app.MapPut("/products/{productId}", async (ApplicationDbContext dbContext, int productId, Product product) =>
+{
+    if (productId != product.ProductId)
+    {
+        return Results.BadRequest();
+    }
+
+    dbContext.Entry(product).State = EntityState.Modified;
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+
+app.MapDelete("/products/{productId}", async (ApplicationDbContext dbContext, int productId) =>
+{
+    var product = await dbContext.Products.FindAsync(productId);
+    if (product == null)
+    {
+        return Results.NotFound();
+    }
+
+    dbContext.Products.Remove(product);
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+app.MapGet("/inventory", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
+{
+    var inventory = await dbContext.Inventories
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+    return inventory;
 }).WithOpenApi();
 
 app.MapPost("/inventory", async (ApplicationDbContext dbContext, Inventory inventory) =>
@@ -100,6 +113,24 @@ app.MapPost("/inventory", async (ApplicationDbContext dbContext, Inventory inven
     await dbContext.SaveChangesAsync();
     return Results.Created($"/inventory/{inventory.InventoryId}", inventory);
 }).WithOpenApi();
+
+app.MapGet("/providers", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
+{
+    var providers = await dbContext.Providers
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+    return providers;
+}).WithOpenApi();
+
+app.MapPost("/providers", async (ApplicationDbContext dbContext, Provider provider) =>
+{
+    dbContext.Providers.Add(provider);
+    await dbContext.SaveChangesAsync();
+    return Results.Created($"/providers/{provider.ProviderId}", provider);
+}).WithOpenApi();
+
+
 
 app.Run();
 
