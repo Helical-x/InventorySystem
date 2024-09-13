@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Configure InMemoryDB for development
-if (builder.Environment.IsDevelopment())
+if (builder.Environment.IsDevelopment() || builder.Environment.IsProduction())
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                            throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
