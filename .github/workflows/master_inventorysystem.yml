@@ -28,7 +28,7 @@ jobs:
         run: dotnet build  --configuration Release --no-restore
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp src/inventorysystem/inventorysystem.csproj
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp src/InventorySystem.Api/InventorySystem.Api.csproj
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
