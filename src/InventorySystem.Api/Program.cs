@@ -1,17 +1,14 @@
 using InventorySystem.Api.data;
 using InventorySystem.Api.models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
-using Microsoft.Identity.Abstractions;
-using Microsoft.Identity.Web.Resource;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 // Configure InMemoryDB for development
-if (builder.Environment.IsDevelopment() || builder.Environment.IsProduction())
+if (builder.Environment.IsDevelopment() || true)
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                            throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
