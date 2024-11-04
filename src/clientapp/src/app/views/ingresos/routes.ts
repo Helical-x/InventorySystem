@@ -8,7 +8,7 @@ export const routes: Routes = [
         path: '',
         loadComponent: () => import('./ingresos.component').then(m => m.IngresosComponent),
         data: {
-          title: 'Ingresos'
+          title: 'Ordenes de Compra'
         }
       }
 
