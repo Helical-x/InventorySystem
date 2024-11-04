@@ -6,9 +6,9 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./movimientos.component').then(m => m.MovimientosComponent),
+        loadComponent: () => import('./transferencias.component').then(m => m.TransferenciasosComponent),
         data: {
-          title: 'Movimientos'
+          title: 'Transferencias'
         }
       }
 

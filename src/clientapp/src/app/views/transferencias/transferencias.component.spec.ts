@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MovimientosComponent } from './movimientos.component';
+import { MovimientosComponent } from './transferencias.component';
 
 describe('MovimientosComponent', () => {
   let component: MovimientosComponent;

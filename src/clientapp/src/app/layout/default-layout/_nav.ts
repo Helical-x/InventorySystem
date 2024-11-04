@@ -20,17 +20,27 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cil-storage' }
   },
   {
-    name: 'Ingresos',
+    name: 'Ordenes de Compra',
     url: '/ingresos',
     iconComponent: { name: 'cil-storage' }
   },
   {
-    name: 'Salidas',
+    name: 'Envios a Clientes',
     url: '/ingresos',
     iconComponent: { name: 'cil-storage' }
   },
   {
-    name: 'Movimientos',
+    name: 'Transferencias',
+    url: '/movimientos',
+    iconComponent: { name: 'cil-storage' }
+  },
+  {
+    name: 'Bodegas',
+    url: '/movimientos',
+    iconComponent: { name: 'cil-storage' }
+  },
+  {
+    name: 'Inventario',
     url: '/movimientos',
     iconComponent: { name: 'cil-storage' }
   },
