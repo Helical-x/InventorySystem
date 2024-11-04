@@ -30,7 +30,7 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cil-storage' }
   },
   {
-    name: 'movimientos',
+    name: 'Movimientos',
     url: '/movimientos',
     iconComponent: { name: 'cil-storage' }
   },
