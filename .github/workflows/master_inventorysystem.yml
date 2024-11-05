@@ -21,20 +21,17 @@ jobs:
         with:
           dotnet-version: '9.x'
 
-      - name: Install dependencies
-        run: dotnet restore
-
       - name: Build with dotnet
-        run: dotnet build  --configuration Release --no-restore
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish --runtime linux-x64 -c Release -o ${{env.DOTNET_ROOT}}/myapp src/InventorySystem.Api/InventorySystem.Api.csproj
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/src/InventorySystem.Api
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: dotnet-api
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/src/InventorySystem.Api
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,14 +46,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: dotnet-api
-          
-      - name: Variable Substitution API
-        uses: microsoft/variable-substitution@v1
-        with:
-            files: dotnet-api/appsettings.json
-        env:
-            ConnectionStrings.DefaultConnection: "DataSource=app.db;Cache=Shared"
+          name: .net-app
 
       - name: Login to Azure
         uses: azure/login@v2
