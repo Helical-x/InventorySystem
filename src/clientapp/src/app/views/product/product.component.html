@@ -1,51 +1,43 @@
 <div>
   <div>
+    <button class="btn btn-primary" (click)="newProduct()">Nuevo</button>
+  </div>
+  <div>
     <table cTable hover striped>
       <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Class</th>
-        <th scope="col">Heading</th>
-        <th scope="col">Heading</th>
-      </tr>
+        <tr>
+          <th scope="col">Product ID</th>
+          <th scope="col">Product Code</th>
+          <th scope="col">Barcode</th>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Category</th>
+          <th scope="col">Reorder Quantity</th>
+          <th scope="col">Weight</th>
+          <th scope="col">Height</th>
+          <th scope="col">Width</th>
+          <th scope="col">Depth</th>
+        </tr>
       </thead>
       <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>&#64;mdo</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>&#64;fat</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td colSpan="2">Larry the Bird</td>
-        <td>&#64;twitter</td>
-      </tr>
+        <tr *ngFor="let product of products">
+          <td>{{ product.productId }}</td>
+          <td>{{ product.productCode || 'N/A' }}</td>
+          <td>{{ product.barcode || 'N/A' }}</td>
+          <td>{{ product.productName || 'N/A' }}</td>
+          <td>{{ product.productDescription || 'N/A' }}</td>
+          <td>{{ product.productCategory || 'N/A' }}</td>
+          <td>{{ product.reorderQuantity }}</td>
+          <td>{{ product.productWeight }}</td>
+          <td>{{ product.productHeight }}</td>
+          <td>{{ product.productWidth }}</td>
+          <td>{{ product.productDepth }}</td>
+        </tr>
       </tbody>
     </table>
-    <c-pagination aria-label="Paginacion Productos">
-      <li cPageItem>
-        <a cPageLink [routerLink]>Previous</a>
-      </li>
-      <li cPageItem>
-        <a cPageLink [routerLink]>1</a>
-      </li>
-      <li cPageItem>
-        <a cPageLink [routerLink]>2</a>
-      </li>
-      <li cPageItem>
-        <a cPageLink [routerLink]>3</a>
-      </li>
-      <li cPageItem>
-        <a cPageLink [routerLink]>Next</a>
-      </li>
-    </c-pagination>
+  </div>
+  <div class="pagination-container">
+    <mat-paginator [length]=totalPages [pageSize]=pageSize [pageIndex]=pageNumber (page)=onPageChange($event)></mat-paginator>
   </div>
 
 

@@ -10,6 +10,13 @@ export const routes: Routes = [
         data: {
           title: 'Productos'
         }
+      },
+      {
+        path: 'new-product',
+        loadComponent: () => import('./new-product/new-product.component').then(m => m.NewProductComponent),
+        data: {
+          title: 'Productos / Nuevo Productos'
+        }
       }
 
     ]
