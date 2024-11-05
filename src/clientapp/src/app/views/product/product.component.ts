@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TableModule, UtilitiesModule,PageItemDirective, PageLinkDirective, PaginationComponent } from '@coreui/angular';
 import { RouterLink } from '@angular/router';
-
+import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'app-products',
@@ -9,7 +9,9 @@ import { RouterLink } from '@angular/router';
   imports: [
     TableModule,
     UtilitiesModule,
-    PageItemDirective, PageLinkDirective, PaginationComponent,
+    PageItemDirective,
+    PageLinkDirective,
+    PaginationComponent,
     RouterLink
   ],
   templateUrl: './product.component.html',

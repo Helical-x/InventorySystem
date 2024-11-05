@@ -4,6 +4,6 @@ export const environment = {
     production: false,
     name: "DEV",
 
-    productos: `${baseURL}/products` ,
+    products: `${baseURL}/products` ,
 
 };

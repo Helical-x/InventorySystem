@@ -8,7 +8,7 @@ import { constant } from 'lodash-es';
 @Injectable({
   providedIn: 'root'
 })
-export class ProductsServiceService {
+export class ProductsService {
 
   constructor(private http: HttpClient) { }
 
@@ -17,6 +17,6 @@ export class ProductsServiceService {
       'pageNumber': pageNumber,
       'pageSize': pageSize
     }
-    return this.http.get(environment.productos, {params});
+    return this.http.get(environment.products, {params});
   }
 }
