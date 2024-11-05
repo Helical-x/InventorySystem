@@ -19,28 +19,36 @@ export const routes: Routes = [
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
       },
       {
-        path: 'productos',
-        loadChildren: () => import('./views/productos/routes').then((m) => m.routes)
+        path: 'products',
+        loadChildren: () => import('./views/product/routes').then((m) => m.routes)
       },
       {
-        path: 'ingresos',
-        loadChildren: () => import('./views/ingresos/routes').then((m) => m.routes)
+        path: 'warehouses',
+        loadChildren: () => import('./views/warehouse/routes').then((m) => m.routes)
       },
       {
-        path: 'salidas',
-        loadChildren: () => import('./views/salidas/routes').then((m) => m.routes)
+        path: 'orders',
+        loadChildren: () => import('./views/order/routes').then((m) => m.routes)
       },
       {
-        path: 'movimientos',
-        loadChildren: () => import('./views/movimientos/routes').then((m) => m.routes)
+        path: 'inventories',
+        loadChildren: () => import('./views/inventory/routes').then((m) => m.routes)
       },
       {
-        path: 'clientes',
-        loadChildren: () => import('./views/clientes/routes').then((m) => m.routes)
+        path: 'deliverys',
+        loadChildren: () => import('./views/delivery/routes').then((m) => m.routes)
       },
       {
-        path: 'proveedores',
-        loadChildren: () => import('./views/proveedores/routes').then((m) => m.routes)
+        path: 'transfers',
+        loadChildren: () => import('./views/transfer/routes').then((m) => m.routes)
+      },
+      {
+        path: 'clients',
+        loadChildren: () => import('./views/client/routes').then((m) => m.routes)
+      },
+      {
+        path: 'providers',
+        loadChildren: () => import('./views/provider/routes').then((m) => m.routes)
       }
     ]
   },

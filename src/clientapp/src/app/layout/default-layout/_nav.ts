@@ -16,32 +16,32 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Productos',
-    url: '/productos',
+    url: '/products',
     iconComponent: { name: 'cil-storage' }
   },
   {
     name: 'Ordenes de Compra',
-    url: '/ingresos',
+    url: '/orders',
     iconComponent: { name: 'cil-storage' }
   },
   {
     name: 'Envios a Clientes',
-    url: '/ingresos',
+    url: '/deliverys',
     iconComponent: { name: 'cil-storage' }
   },
   {
     name: 'Transferencias',
-    url: '/movimientos',
+    url: '/transfers',
     iconComponent: { name: 'cil-storage' }
   },
   {
     name: 'Bodegas',
-    url: '/movimientos',
+    url: '/warehouses',
     iconComponent: { name: 'cil-storage' }
   },
   {
     name: 'Inventario',
-    url: '/movimientos',
+    url: '/inventories',
     iconComponent: { name: 'cil-storage' }
   },
   {
@@ -50,12 +50,12 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Clientes',
-    url: '/clientes',
+    url: '/clients',
     iconComponent: { name: 'cil-storage' }
   },
   {
     name: 'Proveedores',
-    url: '/proveedores',
+    url: '/providers',
     iconComponent: { name: 'cil-storage' }
   }
 
