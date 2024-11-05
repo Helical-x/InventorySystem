@@ -18,7 +18,7 @@ export class ProductsService {
   }
 
   public createProduct(product:Product): Observable<any> {
-    //const URLRequest = `${environment.products}/new/`;
+    const URLRequest = `${environment.products}/new/`;
     return this.http.post(environment.products,product);
   }
 }

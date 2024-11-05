@@ -1,6 +1,7 @@
 <div>
   <div>
     <button class="btn btn-primary" (click)="newProduct()">Nuevo</button>
+
   </div>
   <div>
     <table cTable hover striped>
@@ -17,6 +18,7 @@
           <th scope="col">Height</th>
           <th scope="col">Width</th>
           <th scope="col">Depth</th>
+          <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +34,9 @@
           <td>{{ product.productHeight }}</td>
           <td>{{ product.productWidth }}</td>
           <td>{{ product.productDepth }}</td>
+          <td>
+            <button class="btn btn-warning" (click)="editProduct(product.productId)">Editar</button>
+          </td>
         </tr>
       </tbody>
     </table>
