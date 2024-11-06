@@ -70,6 +70,11 @@ app.MapGet("/products", async (ApplicationDbContext dbContext, int pageNumber = 
     return products;
 }).WithOpenApi();
 
+app.MapGet("/products/{productId}", async (ApplicationDbContext dbContext, int productId) =>
+{
+    var product = await dbContext.Products.FindAsync(productId);
+    return product;
+}).WithOpenApi();
 
 app.MapPost("/products", async (ApplicationDbContext dbContext, Product product) =>
 {
