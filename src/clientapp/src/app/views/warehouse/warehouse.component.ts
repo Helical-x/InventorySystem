@@ -42,7 +42,7 @@ export class WarehouseComponent {
   };
 
   public getWarehouses(){
-    this.warehouseService.getWareouses(this.pageNumber,this.pageSize).subscribe(
+    this.warehouseService.getWarehouses(this.pageNumber,this.pageSize).subscribe(
       response => {
         console.log(response);
         this.warehouses = response.items;

@@ -1,1 +1,55 @@
-<p>inventory works!</p>
+<div class="container">
+  <h2>Gestión de Inventario</h2>
+
+  <!-- Selector de Warehouse -->
+  <div class="form-group">
+    <label for="warehouseSelect">Seleccione un Almacén:</label>
+    <select
+      id="warehouseSelect"
+      class="form-control"
+      [(ngModel)]="selectedWarehouseId"
+      (change)="onWarehouseChange()">
+      <option *ngFor="let warehouse of warehouses" [value]="warehouse.warehouseId">
+        {{ warehouse.warehouseName }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Lista de Productos en el Inventario del Almacén Seleccionado -->
+  <h3 *ngIf="selectedWarehouse">Productos en el Inventario de {{ selectedWarehouse?.warehouseName }}</h3>
+  <table class="table table-striped" *ngIf="inventoryProducts.length > 0">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad Actual</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of inventoryProducts">
+        <td>{{ item.product?.productName }}</td>
+        <td>{{ item.quantityAvailable }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="inventoryProducts.length === 0">No hay productos en este inventario.</p>
+
+  <!-- Selector para Agregar Nuevos Productos -->
+  <h3>Agregar Producto al Inventario</h3>
+  <div class="form-group">
+    <label for="productSelect">Seleccione un Producto:</label>
+    <select
+      id="productSelect"
+      class="form-control"
+      [(ngModel)]="selectedProductId">
+      <option *ngFor="let product of availableProducts" [value]="product.productId">
+        {{ product.productName }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Botón para Agregar Producto al Inventario -->
+  <button class="btn btn-primary mt-3" (click)="addProductToInventory()" [disabled]="!selectedProductId">
+    Agregar Producto
+  </button>
+</div>

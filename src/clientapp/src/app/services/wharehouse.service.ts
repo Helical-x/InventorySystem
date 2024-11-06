@@ -10,7 +10,7 @@ export class WarehouseService {
 
   constructor(private http: HttpClient) { }
 
-  public getWareouses (pageNumber:number,pageSize: number): Observable<any> {
+  public getWarehouses (pageNumber:number,pageSize: number): Observable<any> {
     const params = {
       'pageNumber': pageNumber,
       'pageSize': pageSize
@@ -20,6 +20,11 @@ export class WarehouseService {
 
   public createWarehouse(product:Warehouse): Observable<any> {
     return this.http.post(environment.warehouse,product);
+  }
+
+  public getInventoryByWarehouseId(warehouseIde:number):Observable<any> {
+    const URLRequest = `${environment.inventory}/warehouse/${warehouseIde}/products`;
+    return this.http.get(URLRequest);
   }
 
 
