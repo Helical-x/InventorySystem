@@ -16,7 +16,7 @@
   </div>
 
   <!-- Lista de Productos en el Inventario del Almacén Seleccionado -->
-  <h3 *ngIf="selectedWarehouse">Productos en el Inventario de {{ selectedWarehouse?.warehouseName }}</h3>
+  <h3 *ngIf="selectedWarehouse">Productos en el Inventario de {{ selectedWarehouse.warehouseName }}</h3>
   <table class="table table-striped" *ngIf="inventoryProducts.length > 0">
     <thead>
       <tr>
