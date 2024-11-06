@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from 'src/app/models/product.models';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductsService } from '../../../services/products.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-product',
@@ -18,31 +18,38 @@ import { Router } from '@angular/router';
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.scss'
 })
-export class EditProductComponent {
+export class EditProductComponent implements OnInit{
 
-  product: Product = {
-    productId: 0,
-    productCode: null,
-    barcode: null,
-    productName: null,
-    productDescription: null,
-    productCategory: null,
-    reorderQuantity: 0,
-    productWeight: 0,
-    productHeight: 0,
-    productWidth: 0,
-    productDepth: 0
-  };
+  product: Product | undefined;
+
   constructor(
+    private route: ActivatedRoute,
     private productsService: ProductsService,
     private router: Router
   ) {}
 
+  ngOnInit(): void {
+    const productId = this.route.snapshot.paramMap.get('productId');
+    if (productId) {
+      this.loadProduct(Number(productId));
+    }
+  }
+  loadProduct(productId: number): void {
+    this.productsService.findProduct(productId).subscribe(
+      product => this.product = product,
+      error => console.error('Error al cargar el producto:', error)
+    );
+  }
+
+
   onSubmit() {
-    this.productsService.createProduct(this.product).subscribe(
+    if(this.product == undefined) {
+      return;
+    }
+    this.productsService.editProduct(this.product).subscribe(
       response => {
         console.log('Producto creado:', response);
-        this.router.navigate(['/products']); // Navegar a la lista de productos después de la creación
+        this.router.navigate(['/products']);
       },
       error => {
         console.error('Error al crear el producto:', error);
