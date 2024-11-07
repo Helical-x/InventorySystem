@@ -1,6 +1,8 @@
 using InventorySystem.Api.data;
 using InventorySystem.Api.models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 
@@ -63,11 +65,18 @@ app.UseCors();
 
 app.MapGet("/products", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
+    var totalProducts = await dbContext.Products.CountAsync();
     var products = await dbContext.Products
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
-    return products;
+    return Results.Ok(
+        new
+        {
+            items = products,
+            totalItems = totalProducts
+        });
+        
 }).WithOpenApi();
 
 app.MapGet("/products/{productId}", async (ApplicationDbContext dbContext, int productId) =>
