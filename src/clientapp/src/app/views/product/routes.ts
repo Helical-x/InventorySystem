@@ -10,8 +10,21 @@ export const routes: Routes = [
         data: {
           title: 'Productos'
         }
+      },
+      {
+        path: 'new-product',
+        loadComponent: () => import('./new-product/new-product.component').then(m => m.NewProductComponent),
+        data: {
+          title: 'Productos / Nuevo Productos'
+        }
+      },
+      {
+        path: 'edit-product/:productId',
+        loadComponent: () => import('./edit-product/edit-product.component').then(m => m.EditProductComponent),
+        data: {
+          title: 'Productos / Editar Producto'
+        }
       }
-
     ]
   }
 ];

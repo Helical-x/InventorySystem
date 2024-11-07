@@ -1,0 +1,34 @@
+<div class="container">
+  <h2>Crear Nuevo Almacén</h2>
+  <form (ngSubmit)="onSubmit()" #warehouseForm="ngForm">
+
+    <div class="form-group">
+      <label for="warehouseName">Nombre del Almacén</label>
+      <input
+        type="text"
+        id="warehouseName"
+        name="warehouseName"
+        class="form-control"
+        [(ngModel)]="warehouse.warehouseName"
+        placeholder="Ingrese el nombre del almacén"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="warehouseAddress">Dirección del Almacén</label>
+      <input
+        type="text"
+        id="warehouseAddress"
+        name="warehouseAddress"
+        class="form-control"
+        [(ngModel)]="warehouse.warehouseAddress"
+        placeholder="Ingrese la dirección del almacén"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!warehouseForm.form.valid">
+      Crear Almacén
+    </button>
+  </form>
+</div>
