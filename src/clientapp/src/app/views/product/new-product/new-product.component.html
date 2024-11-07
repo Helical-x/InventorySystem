@@ -1,0 +1,138 @@
+<div class="container">
+  <h2>Crear Nuevo Producto</h2>
+  <form (ngSubmit)="onSubmit()" #productForm="ngForm">
+
+    <div class="form-group">
+      <label for="productCode">Código del Producto</label>
+      <input
+        type="text"
+        id="productCode"
+        name="productCode"
+        class="form-control"
+        [(ngModel)]="product.productCode"
+        placeholder="Ingrese el código del producto"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="barcode">Código de Barras</label>
+      <input
+        type="text"
+        id="barcode"
+        name="barcode"
+        class="form-control"
+        [(ngModel)]="product.barcode"
+        placeholder="Ingrese el código de barras"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="productName">Nombre del Producto</label>
+      <input
+        type="text"
+        id="productName"
+        name="productName"
+        class="form-control"
+        [(ngModel)]="product.productName"
+        placeholder="Ingrese el nombre del producto"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="productDescription">Descripción del Producto</label>
+      <textarea
+        id="productDescription"
+        name="productDescription"
+        class="form-control"
+        [(ngModel)]="product.productDescription"
+        placeholder="Ingrese una descripción del producto">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="productCategory">Categoría del Producto</label>
+      <input
+        type="text"
+        id="productCategory"
+        name="productCategory"
+        class="form-control"
+        [(ngModel)]="product.productCategory"
+        placeholder="Ingrese la categoría del producto"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="reorderQuantity">Cantidad de Reorden</label>
+      <input
+        type="number"
+        id="reorderQuantity"
+        name="reorderQuantity"
+        class="form-control"
+        [(ngModel)]="product.reorderQuantity"
+        placeholder="Ingrese la cantidad de reorden"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="productWeight">Peso del Producto (kg)</label>
+      <input
+        type="number"
+        id="productWeight"
+        name="productWeight"
+        class="form-control"
+        [(ngModel)]="product.productWeight"
+        placeholder="Ingrese el peso del producto"
+        step="0.01"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="productHeight">Altura del Producto (cm)</label>
+      <input
+        type="number"
+        id="productHeight"
+        name="productHeight"
+        class="form-control"
+        [(ngModel)]="product.productHeight"
+        placeholder="Ingrese la altura del producto"
+        step="0.01"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="productWidth">Ancho del Producto (cm)</label>
+      <input
+        type="number"
+        id="productWidth"
+        name="productWidth"
+        class="form-control"
+        [(ngModel)]="product.productWidth"
+        placeholder="Ingrese el ancho del producto"
+        step="0.01"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="productDepth">Profundidad del Producto (cm)</label>
+      <input
+        type="number"
+        id="productDepth"
+        name="productDepth"
+        class="form-control"
+        [(ngModel)]="product.productDepth"
+        placeholder="Ingrese la profundidad del producto"
+        step="0.01"
+        required
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!productForm.form.valid">
+      Crear Producto
+    </button>
+  </form>
+</div>

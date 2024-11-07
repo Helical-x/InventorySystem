@@ -1,1 +1,28 @@
-<p>warehouse works!</p>
+<div>
+  <div>
+    <button class="btn btn-primary" (click)="newWarehouse()">Nuevo</button>
+  </div>
+  <div>
+    <table cTable hover striped>
+      <thead>
+        <tr>
+          <th scope="col">ID del Almacén</th>
+          <th scope="col">Nombre del Almacén</th>
+          <th scope="col">Dirección del Almacén</th>
+          <th scope="col">Cantidad de Inventarios</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let warehouse of warehouses">
+          <td>{{ warehouse.warehouseId }}</td>
+          <td>{{ warehouse.warehouseName || 'N/A' }}</td>
+          <td>{{ warehouse.warehouseAddress || 'N/A' }}</td>
+          <td>{{ warehouse.inventories ? warehouse.inventories.length : 0 }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="pagination-container">
+    <mat-paginator [length]=totalPages [pageSize]=pageSize [pageIndex]=pageNumber (page)=onPageChange($event)></mat-paginator>
+  </div>
+</div>
