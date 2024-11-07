@@ -10,6 +10,20 @@ export const routes: Routes = [
         data: {
           title: 'Proveedores'
         }
+      },
+      {
+        path: 'new-provider',
+        loadComponent: () => import('./new-provider/new-provider.component').then(m => m.NewProviderComponent),
+        data: {
+          title: 'Productos / Nuevo Productos'
+        }
+      },
+      {
+        path: 'edit-provider/:providerId',
+        loadComponent: () => import('./edit-provider/edit-provider.component').then(m => m.EditProviderComponent),
+        data: {
+          title: 'Productos / Editar Producto'
+        }
       }
 
     ]
