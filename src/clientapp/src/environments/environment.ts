@@ -6,9 +6,9 @@ export const environment = {
     name: "DEV",
 
     products: `${baseURL}products` ,
-    warehouse: `${baseURL}wharehouse` ,
-    client: `${baseURL}client` ,
-    provider: `${baseURL}provider` ,
+    warehouse: `${baseURL}warehouses` ,
+    customer: `${baseURL}customers` ,
+    provider: `${baseURL}providers` ,
     order: `${baseURL}order` ,
     delivery: `${baseURL}delivery` ,
     transfer: `${baseURL}transefer` ,

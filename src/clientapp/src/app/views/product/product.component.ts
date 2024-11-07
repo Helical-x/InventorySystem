@@ -27,7 +27,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 })
 export class ProductComponent implements OnInit {
 
-  products:Product[] = this.getMockProducts();
+  products:Product[] = [];
   pageNumber: number = 1;
   pageSize: number = 10;
   totalItems: number = 0;

@@ -18,8 +18,12 @@ export class WarehouseService {
     return this.http.get(environment.warehouse, {params});
   }
 
-  public createWarehouse(product:Warehouse): Observable<any> {
-    return this.http.post(environment.warehouse,product);
+  public getAllWarehouses (): Observable<any> {
+    return this.http.get(environment.warehouse);
+  }
+
+  public createWarehouse(warehouse:Warehouse): Observable<any> {
+    return this.http.post(environment.warehouse,warehouse);
   }
 
   public getInventoryByWarehouseId(warehouseIde:number):Observable<any> {

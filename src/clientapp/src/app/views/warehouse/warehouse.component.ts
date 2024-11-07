@@ -27,7 +27,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
   templateUrl: './warehouse.component.html',
   styleUrl: './warehouse.component.scss'
 })
-export class WarehouseComponent {
+export class WarehouseComponent implements OnInit {
   warehouses:Warehouse[] = [];
   pageNumber: number = 1;
   pageSize: number = 10;
@@ -39,7 +39,11 @@ export class WarehouseComponent {
     private route: ActivatedRoute
   ){
 
-  };
+  }
+  ngOnInit(): void {
+    this.getWarehouses();
+  }
+;
 
   public getWarehouses(){
     this.warehouseService.getWarehouses(this.pageNumber,this.pageSize).subscribe(
