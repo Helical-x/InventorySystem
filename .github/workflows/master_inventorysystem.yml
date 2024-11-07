@@ -21,19 +21,16 @@ jobs:
         with:
           dotnet-version: '9.x'
 
-      - name: Install dependencies
-        run: dotnet restore
-
       - name: Build with dotnet
-        run: dotnet build  --configuration Release --no-restore
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish --runtime linux-x64 -c Release -o ${{env.DOTNET_ROOT}}/myapp src/InventorySystem.Api/InventorySystem.Api.csproj
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: dotnet-api
+          name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
@@ -49,21 +46,14 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: dotnet-api
-          
-      - name: Variable Substitution API
-        uses: microsoft/variable-substitution@v1
-        with:
-            files: dotnet-api/appsettings.json
-        env:
-            ConnectionStrings.DefaultConnection: "DataSource=app.db;Cache=Shared"
-
+          name: .net-app
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F847D0FF69FB465B8D5043B89E58D3DA }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_9F13DB75019B4A3FA0208A4F55AA7B2D }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1D43EEED64574B24BD5A9265A5862454 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D7D93E4D08BC4F19AB6AEC7E204DCBDE }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_54C96D4A09AF4AD9996B65F1CBD8F31F }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_23B9F454B1264B18AF47B9024A0E3183 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp

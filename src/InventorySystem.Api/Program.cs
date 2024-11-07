@@ -5,7 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("*")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 // Configure InMemoryDB for development
 if (builder.Environment.IsDevelopment() || true)
@@ -51,6 +59,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors();
 
 app.MapGet("/products", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
@@ -61,6 +70,11 @@ app.MapGet("/products", async (ApplicationDbContext dbContext, int pageNumber = 
     return products;
 }).WithOpenApi();
 
+app.MapGet("/products/{productId}", async (ApplicationDbContext dbContext, int productId) =>
+{
+    var product = await dbContext.Products.FindAsync(productId);
+    return product;
+}).WithOpenApi();
 
 app.MapPost("/products", async (ApplicationDbContext dbContext, Product product) =>
 {
@@ -95,7 +109,7 @@ app.MapDelete("/products/{productId}", async (ApplicationDbContext dbContext, in
     return Results.NoContent();
 }).WithOpenApi();
 
-app.MapGet("/inventory", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
+app.MapGet("/inventories", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
     var inventory = await dbContext.Inventories
         .Skip((pageNumber - 1) * pageSize)
@@ -104,11 +118,93 @@ app.MapGet("/inventory", async (ApplicationDbContext dbContext, int pageNumber =
     return inventory;
 }).WithOpenApi();
 
-app.MapPost("/inventory", async (ApplicationDbContext dbContext, Inventory inventory) =>
+app.MapPost("/inventories/{productId}/{warehouseId}", async (ApplicationDbContext dbContext, Inventory inventory, int productId, int warehouseId) =>
 {
+    inventory.ProductId = productId;
+    inventory.WarehouseId = warehouseId;
     dbContext.Inventories.Add(inventory);
     await dbContext.SaveChangesAsync();
     return Results.Created($"/inventory/{inventory.InventoryId}", inventory);
+}).WithOpenApi();
+
+
+app.MapPut("/inventories/{inventoryId}", async (ApplicationDbContext dbContext, int inventoryId, Inventory inventory) =>
+{
+    if (inventoryId != inventory.InventoryId)
+    {
+        return Results.BadRequest();
+    }
+
+    dbContext.Entry(inventory).State = EntityState.Modified;
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+
+app.MapDelete("/inventories/{inventoryId}", async (ApplicationDbContext dbContext, int inventoryId) =>
+{
+    var warehouse = await dbContext.Inventories.FindAsync(inventoryId);
+    if (warehouse == null)
+    {
+        return Results.NotFound();
+    }
+
+    dbContext.Inventories.Remove(warehouse);
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+app.MapGet("/warehouses", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
+{
+    var products = await dbContext.Warehouses
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+    return products;
+}).WithOpenApi();
+
+app.MapGet("/warehouses/{warehouseId}/products", async (ApplicationDbContext dbContext, int warehouseId, int pageNumber = 1, int pageSize = 10) =>
+{
+    var products = await dbContext.Inventories
+        .Where(i => i.WarehouseId == warehouseId)
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+    return products;
+}).WithOpenApi();
+
+
+app.MapPost("/warehouses", async (ApplicationDbContext dbContext, Warehouse warehouse) =>
+{
+    dbContext.Warehouses.Add(warehouse);
+    await dbContext.SaveChangesAsync();
+    return Results.Created($"/products/{warehouse.WarehouseId}", warehouse);
+}).WithOpenApi();
+
+app.MapPut("/warehouses/{warehouseId}", async (ApplicationDbContext dbContext, int warehouseId, Warehouse warehouse) =>
+{
+    if (warehouseId != warehouse.WarehouseId)
+    {
+        return Results.BadRequest();
+    }
+
+    dbContext.Entry(warehouse).State = EntityState.Modified;
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+
+app.MapDelete("/warehouses/{warehouseId}", async (ApplicationDbContext dbContext, int warehouseId) =>
+{
+    var warehouse = await dbContext.Products.FindAsync(warehouseId);
+    if (warehouse == null)
+    {
+        return Results.NotFound();
+    }
+
+    dbContext.Products.Remove(warehouse);
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
 }).WithOpenApi();
 
 app.MapGet("/providers", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
@@ -127,7 +223,116 @@ app.MapPost("/providers", async (ApplicationDbContext dbContext, Provider provid
     return Results.Created($"/providers/{provider.ProviderId}", provider);
 }).WithOpenApi();
 
+app.MapPut("/providers/{providerId}", async (ApplicationDbContext dbContext, int providerId, Provider provider) =>
+{
+    if (providerId != provider.ProviderId)
+    {
+        return Results.BadRequest();
+    }
 
+    dbContext.Entry(provider).State = EntityState.Modified;
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+
+app.MapDelete("/providers/{providerId}", async (ApplicationDbContext dbContext, int providerId) =>
+{
+    var provider = await dbContext.Providers.FindAsync(providerId);
+    if (provider == null)
+    {
+        return Results.NotFound();
+    }
+
+    dbContext.Providers.Remove(provider);
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+
+app.MapGet("/customers", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
+{
+    var customers = await dbContext.Customers
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+    return customers;
+}).WithOpenApi();
+
+app.MapPost("/customers", async (ApplicationDbContext dbContext, Customer customer) =>
+{
+    dbContext.Customers.Add(customer);
+    await dbContext.SaveChangesAsync();
+    return Results.Created($"/cutomers/{customer.CustomerId}", customer);
+}).WithOpenApi();
+
+app.MapPut("/customers/{customerId}", async (ApplicationDbContext dbContext, int customerId, Customer customer) =>
+{
+    if (customerId != customer.CustomerId)
+    {
+        return Results.BadRequest();
+    }
+
+    dbContext.Entry(customer).State = EntityState.Modified;
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+
+app.MapDelete("/customers/{customerId}", async (ApplicationDbContext dbContext, int customerId) =>
+{
+    var customer = await dbContext.Customers.FindAsync(customerId);
+    if (customer == null)
+    {
+        return Results.NotFound();
+    }
+
+    dbContext.Customers.Remove(customer);
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+app.MapGet("/orders", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
+{
+    var orders = await dbContext.Orders
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+    return orders;
+}).WithOpenApi();
+
+app.MapPost("/orders", async (ApplicationDbContext dbContext, Order order) =>
+{
+    dbContext.Orders.Add(order);
+    await dbContext.SaveChangesAsync();
+    return Results.Created($"/orders/{order.OrderId}", order);
+}).WithOpenApi();
+
+app.MapPut("/orders/{orderId}", async (ApplicationDbContext dbContext, int orderId, Order order) =>
+{
+    if (orderId != order.OrderId)
+    {
+        return Results.BadRequest();
+    }
+
+    dbContext.Entry(order).State = EntityState.Modified;
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+
+app.MapDelete("/orders/{orderId}", async (ApplicationDbContext dbContext, int orderId) =>
+{
+    var order = await dbContext.Orders.FindAsync(orderId);
+    if (order == null)
+    {
+        return Results.NotFound();
+    }
+
+    dbContext.Orders.Remove(order);
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
 
 app.Run();
 
