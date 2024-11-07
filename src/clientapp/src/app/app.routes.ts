@@ -40,7 +40,7 @@ export const routes: Routes = [
       },
       {
         path: 'transfers',
-        loadChildren: () => import('./views/transfer/routes').then((m) => m.routes)
+        loadChildren: () => import('./views/transfer-inventory/routes').then((m) => m.routes)
       },
       {
         path: 'clientes',
