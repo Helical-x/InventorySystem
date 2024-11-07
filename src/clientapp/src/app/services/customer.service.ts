@@ -20,7 +20,7 @@ export class CustomerService {
   public getAllCustormers():Observable<any> {
     return this.http.get(environment.customer);
   }
-  public findProduct(customerId:number): Observable<any> {
+  public findCustomer(customerId:number): Observable<any> {
     const URLRequest = `${environment.customer}/${customerId}`;
     return this.http.get(URLRequest);
   }
