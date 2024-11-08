@@ -40,8 +40,8 @@ export class InventoryComponent implements OnInit {
   }
 
   loadWarehouses() {
-    this.warehouseService.getWarehouses(1,1000).subscribe(
-      warehouses => (this.warehouses = warehouses),
+    this.warehouseService.getAllWarehouses().subscribe(
+      response => (this.warehouses = response.items),
       error => console.error('Error al cargar almacenes:', error)
     );
   }
@@ -64,10 +64,10 @@ export class InventoryComponent implements OnInit {
   }
 
   loadAvailableProducts() {
-    this.productsService.getProducts(1,1000).subscribe(
+    this.productsService.getAllProducts().subscribe(
       response => {
         // Filtramos los productos que no están en el inventario actual
-        const products:Product[] = response.products;
+        const products:Product[] = response.items;
         const inventoryProductIds = this.inventoryProducts.map(item => item.product?.productId);
         this.availableProducts = products.filter(product => !inventoryProductIds.includes(product.productId));
       },

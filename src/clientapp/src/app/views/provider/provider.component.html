@@ -1,1 +1,37 @@
-<p>provider works!</p>
+<div>
+  <!-- Botón para agregar un nuevo proveedor -->
+  <div>
+    <button class="btn btn-primary" (click)="newProvider()">Nuevo Proveedor</button>
+  </div>
+
+  <!-- Tabla de proveedores -->
+  <div>
+    <table cTable hover striped>
+      <thead>
+        <tr>
+          <th scope="col">Provider ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Address</th>
+          <th scope="col">Order Count</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let provider of providers">
+          <td>{{ provider.providerId }}</td>
+          <td>{{ provider.providerName || 'N/A' }}</td>
+          <td>{{ provider.providerAddress || 'N/A' }}</td>
+          <td>{{ provider.orders ? provider.orders.length : 0 }}</td>
+          <td>
+            <button class="btn btn-warning" (click)="editProvider(provider.providerId)">Editar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginación -->
+  <div class="pagination-container">
+    <mat-paginator [length]="totalPages" [pageSize]="pageSize" [pageIndex]="pageNumber" (page)="onPageChange($event)"></mat-paginator>
+  </div>
+</div>

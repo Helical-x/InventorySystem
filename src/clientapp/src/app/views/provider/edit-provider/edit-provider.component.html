@@ -1,0 +1,37 @@
+<div class="container">
+  <h2>Editar Proveedor</h2>
+  <form (ngSubmit)="onSubmit()" *ngIf="provider" #editProviderForm="ngForm">
+
+    <!-- Campo para el Nombre del Proveedor -->
+    <div class="form-group">
+      <label for="providerName">Nombre del Proveedor</label>
+      <input
+        type="text"
+        id="providerName"
+        name="providerName"
+        class="form-control"
+        [(ngModel)]="provider.providerName"
+        placeholder="Ingrese el nombre del proveedor"
+        required
+      />
+    </div>
+
+    <!-- Campo para la Dirección del Proveedor -->
+    <div class="form-group">
+      <label for="providerAddress">Dirección del Proveedor</label>
+      <input
+        type="text"
+        id="providerAddress"
+        name="providerAddress"
+        class="form-control"
+        [(ngModel)]="provider.providerAddress"
+        placeholder="Ingrese la dirección del proveedor"
+      />
+    </div>
+
+    <!-- Botón de Envío -->
+    <button type="submit" class="btn btn-primary mt-3" [disabled]="!editProviderForm.form.valid">
+      Guardar Cambios
+    </button>
+  </form>
+</div>

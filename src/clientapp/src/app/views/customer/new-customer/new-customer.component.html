@@ -1,0 +1,37 @@
+<div class="container">
+  <h2>Crear Nuevo Cliente</h2>
+  <form (ngSubmit)="onSubmit()" #customerForm="ngForm">
+
+    <!-- Campo para el Nombre del Cliente -->
+    <div class="form-group">
+      <label for="customerName">Nombre del Cliente</label>
+      <input
+        type="text"
+        id="customerName"
+        name="customerName"
+        class="form-control"
+        [(ngModel)]="customer.customerName"
+        placeholder="Ingrese el nombre del cliente"
+        required
+      />
+    </div>
+
+    <!-- Campo para la Dirección del Cliente -->
+    <div class="form-group">
+      <label for="customerAddress">Dirección del Cliente</label>
+      <input
+        type="text"
+        id="customerAddress"
+        name="customerAddress"
+        class="form-control"
+        [(ngModel)]="customer.customerAddress"
+        placeholder="Ingrese la dirección del cliente"
+      />
+    </div>
+
+    <!-- Botón de Envío -->
+    <button type="submit" class="btn btn-primary mt-3" [disabled]="!customerForm.form.valid">
+      Crear Cliente
+    </button>
+  </form>
+</div>

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TransferComponent } from './transfer.component';
+import { EditProviderComponent } from './edit-provider.component';
 
-describe('TransferComponent', () => {
-  let component: TransferComponent;
-  let fixture: ComponentFixture<TransferComponent>;
+describe('EditProviderComponent', () => {
+  let component: EditProviderComponent;
+  let fixture: ComponentFixture<EditProviderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TransferComponent]
+      imports: [EditProviderComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TransferComponent);
+    fixture = TestBed.createComponent(EditProviderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
