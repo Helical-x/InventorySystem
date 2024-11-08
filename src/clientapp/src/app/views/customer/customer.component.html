@@ -1,0 +1,35 @@
+<div>
+  <div>
+    <button class="btn btn-primary" (click)="newCustomer()">Nuevo</button>
+
+  </div>
+  <div>
+    <table cTable hover striped >
+      <thead>
+        <tr>
+          <th>ID del Cliente</th>
+          <th>Nombre del Cliente</th>
+          <th>Dirección del Cliente</th>
+          <th>Cantidad de Entregas</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customer of customers">
+          <td>{{ customer.customerId }}</td>
+          <td>{{ customer.customerName || 'N/A' }}</td>
+          <td>{{ customer.customerAddress || 'N/A' }}</td>
+          <td>{{ customer.deliveries ? customer.deliveries.length : 0 }}</td>
+          <td>
+            <button class="btn btn-warning" (click)="editCustomer(customer.customerId)">Editar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+  <div class="pagination-container">
+    <mat-paginator [length]=totalPages [pageSize]=pageSize [pageIndex]=pageNumber (page)=onPageChange($event)></mat-paginator>
+  </div>
+</div>

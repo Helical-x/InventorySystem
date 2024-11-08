@@ -15,4 +15,12 @@ export class InventoryService {
     return this.http.post(URLRequest,inventory);
 
   }
+
+  public getInventoryByWarehouseId(warehouseId: number): Observable<Inventory[]> {
+    return this.http.get<Inventory[]>(`${environment.inventory}/warehouse/${warehouseId}`);
+  }
+
+  public transferInventory(data: { originInventoryId: number, quantity: number, destinationWarehouseId: number }): Observable<any> {
+    return this.http.post(`${environment.inventory}/transfer`, data);
+  }
 }

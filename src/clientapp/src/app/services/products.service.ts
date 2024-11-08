@@ -16,6 +16,9 @@ export class ProductsService {
     }
     return this.http.get(environment.products, {params});
   }
+  public getAllProducts():Observable<any> {
+    return this.http.get(environment.products);
+  }
   public findProduct(productId:number): Observable<any> {
     const URLRequest = `${environment.products}/${productId}`;
     return this.http.get(URLRequest);
