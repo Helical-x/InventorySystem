@@ -120,11 +120,17 @@ app.MapDelete("/products/{productId}", async (ApplicationDbContext dbContext, in
 
 app.MapGet("/inventories", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
-    var inventory = await dbContext.Inventories
+    var totalInventories = await dbContext.Inventories.CountAsync();
+    var inventories = await dbContext.Inventories
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
-    return inventory;
+    return Results.Ok(
+        new
+        {
+            items = inventories,
+            totalItems = totalInventories
+        });
 }).WithOpenApi();
 
 app.MapPost("/inventories/{productId}/{warehouseId}", async (ApplicationDbContext dbContext, Inventory inventory, int productId, int warehouseId) =>
@@ -165,11 +171,17 @@ app.MapDelete("/inventories/{inventoryId}", async (ApplicationDbContext dbContex
 
 app.MapGet("/warehouses", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
-    var products = await dbContext.Warehouses
+    var totalWarehouses = await dbContext.Warehouses.CountAsync();
+    var warehouses = await dbContext.Warehouses
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
-    return products;
+    return Results.Ok(
+        new
+        {
+            items = warehouses,
+            totalItems = totalWarehouses
+        });
 }).WithOpenApi();
 
 app.MapGet("/warehouses/{warehouseId}/products", async (ApplicationDbContext dbContext, int warehouseId, int pageNumber = 1, int pageSize = 10) =>
@@ -218,11 +230,17 @@ app.MapDelete("/warehouses/{warehouseId}", async (ApplicationDbContext dbContext
 
 app.MapGet("/providers", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
+    var totalProviders = await dbContext.Providers.CountAsync();
     var providers = await dbContext.Providers
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
-    return providers;
+    return Results.Ok(
+        new
+        {
+            items = providers,
+            totalItems = totalProviders
+        });
 }).WithOpenApi();
 
 app.MapPost("/providers", async (ApplicationDbContext dbContext, Provider provider) =>
@@ -261,11 +279,17 @@ app.MapDelete("/providers/{providerId}", async (ApplicationDbContext dbContext, 
 
 app.MapGet("/customers", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
+    var totalCustomers = await dbContext.Customers.CountAsync();
     var customers = await dbContext.Customers
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
-    return customers;
+    return Results.Ok(
+        new
+        {
+            items = customers,
+            totalItems = totalCustomers
+        });
 }).WithOpenApi();
 
 app.MapPost("/customers", async (ApplicationDbContext dbContext, Customer customer) =>
@@ -303,11 +327,17 @@ app.MapDelete("/customers/{customerId}", async (ApplicationDbContext dbContext, 
 
 app.MapGet("/orders", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
+    var totalOrders = await dbContext.Orders.CountAsync();
     var orders = await dbContext.Orders
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
-    return orders;
+    return Results.Ok(
+        new
+        {
+            items = orders,
+            totalItems = totalOrders
+        });
 }).WithOpenApi();
 
 app.MapPost("/orders", async (ApplicationDbContext dbContext, Order order) =>
