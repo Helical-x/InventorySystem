@@ -1,16 +1,14 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule, UtilitiesModule,PageItemDirective, PageLinkDirective, PaginationComponent } from '@coreui/angular';
 import { RouterLink,ActivatedRoute, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-import { Warehouse } from './../../models/warehouse.models';
-import { WarehouseService } from './../../services/wharehouse.service';
-
+import { CustomerService } from './../../services/customer.service';
+import { Customer } from './../../models/customer.models';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-warehouse',
+  selector: 'app-customer',
   standalone: true,
   imports: [
     CommonModule,
@@ -23,33 +21,31 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     HttpClientModule,
     MatPaginatorModule
   ],
-  providers: [WarehouseService],
-  templateUrl: './warehouse.component.html',
-  styleUrl: './warehouse.component.scss'
+  providers: [CustomerService],
+  templateUrl: './customer.component.html',
+  styleUrl: './customer.component.scss'
 })
-export class WarehouseComponent implements OnInit {
-  warehouses:Warehouse[] = [];
+export class ClientComponent {
+
+  customers:Customer[] = [];
   pageNumber: number = 1;
   pageSize: number = 10;
   totalItems: number = 0;
   totalPages:number = 0;
+
   constructor(
-    private warehouseService:WarehouseService,
+    private customerService:CustomerService,
     private router: Router,
     private route: ActivatedRoute
   ){
 
-  }
-  ngOnInit(): void {
-    this.getWarehouses();
-  }
-;
+  };
 
-  public getWarehouses(){
-    this.warehouseService.getWarehouses(this.pageNumber,this.pageSize).subscribe(
+  public getCustomers(){
+    this.customerService.getCustomers(this.pageNumber,this.pageSize).subscribe(
       response => {
         console.log(response);
-        this.warehouses = response.items;
+        this.customers = response.items;
         this.totalItems = response.totalItems;
         this.totalPages = Math.ceil(this.totalItems / this.pageSize);
       },
@@ -61,11 +57,14 @@ export class WarehouseComponent implements OnInit {
   onPageChange(event: any) {
     console.log(event);
     this.pageNumber = event.pageIndex;
-    this.getWarehouses();
+    this.getCustomers();
   }
 
-  public newWarehouse(){
-    this.router.navigate(["new-warehouse"], { relativeTo: this.route });
+  public newCustomer(){
+    this.router.navigate(["new-customer"], { relativeTo: this.route });
+  }
+  public editCustomer(customerId:number){
+    this.router.navigate([`edit-customer/`,customerId], { relativeTo: this.route });
   }
 
 }
