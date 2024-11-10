@@ -20,10 +20,9 @@
         <tbody>
           <tr *ngFor="let order of orders">
             <td>{{ order.orderId }}</td>
-            <td>{{ order.customerName || 'N/A' }}</td>
+            <td>{{ order.providerId }}</td>
             <td>{{ order.orderDate | date:'short' }}</td>
-            <td>{{ order.status || 'Pending' }}</td>
-            <td>{{ order.totalAmount | currency }}</td>
+            <td>{{ order.provider }}</td>
             <td>
             <button class="btn btn-warning" (click)="editOrder(order.orderId)">Editar</button>
             </td>
@@ -34,6 +33,6 @@
 
     <!-- Paginación -->
     <div class="pagination-container">
-    <mat-paginator [length]="totalOrders" [pageSize]="pageSize" [pageIndex]="pageNumber" (page)="onPageChange($event)"></mat-paginator>
+    <mat-paginator [length]="totalPages" [pageSize]="pageSize" [pageIndex]="pageNumber" (page)="onPageChange($event)"></mat-paginator>
     </div>
 </div>

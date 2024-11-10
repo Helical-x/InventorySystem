@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { TableModule, UtilitiesModule, PageItemDirective, PageLinkDirective, PaginationComponent } from '@coreui/angular';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-import { OrdersService } from '../../services/orders.service';
-import { Order } from 'src/app/models/order.models';
+import {OrderService } from '../../services/order.service';
+import { Order } from '../../models/provider.models';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
@@ -21,7 +21,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     HttpClientModule,
     MatPaginatorModule
   ],
-  providers: [OrdersService],
+  providers: [OrderService],
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss']
 })
@@ -34,7 +34,7 @@ export class OrderComponent implements OnInit {
   totalPages: number = 0;
 
   constructor(
-    private ordersService: OrdersService,
+    private orderService: OrderService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -44,7 +44,7 @@ export class OrderComponent implements OnInit {
   }
 
   public getOrders() {
-    this.ordersService.getOrders(this.pageNumber, this.pageSize).subscribe(
+    this.orderService.getOrders(this.pageNumber, this.pageSize).subscribe(
       response => {
         console.log(response);
         this.orders = response.items;
