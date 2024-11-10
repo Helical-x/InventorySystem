@@ -1,8 +1,7 @@
 using InventorySystem.Api.data;
 using InventorySystem.Api.models;
+using InventorySystem.Api.utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 
@@ -332,12 +331,7 @@ app.MapGet("/orders", async (ApplicationDbContext dbContext, int pageNumber = 1,
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
-    return Results.Ok(
-        new
-        {
-            items = orders,
-            totalItems = totalOrders
-        });
+    return Utility.CreateResponse<>(totalOrders, orders);
 }).WithOpenApi();
 
 app.MapPost("/orders", async (ApplicationDbContext dbContext, Order order) =>
