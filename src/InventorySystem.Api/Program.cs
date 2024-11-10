@@ -367,6 +367,52 @@ app.MapDelete("/orders/{orderId}", async (ApplicationDbContext dbContext, int or
     return Results.NoContent();
 }).WithOpenApi();
 
+app.MapGet("/deliveries", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
+{
+    var totalOrders = await dbContext.Deliveries.CountAsync();
+    var orders = await dbContext.Orders
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+    return Utility.CreateResponse<>(totalOrders, orders);
+}).WithOpenApi();
+
+app.MapPost("/orders", async (ApplicationDbContext dbContext, Order order) =>
+{
+    dbContext.Orders.Add(order);
+    await dbContext.SaveChangesAsync();
+    return Results.Created($"/orders/{order.OrderId}", order);
+}).WithOpenApi();
+
+app.MapPut("/orders/{orderId}", async (ApplicationDbContext dbContext, int orderId, Order order) =>
+{
+    if (orderId != order.OrderId)
+    {
+        return Results.BadRequest();
+    }
+
+    dbContext.Entry(order).State = EntityState.Modified;
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+
+app.MapDelete("/orders/{orderId}", async (ApplicationDbContext dbContext, int orderId) =>
+{
+    var order = await dbContext.Orders.FindAsync(orderId);
+    if (order == null)
+    {
+        return Results.NotFound();
+    }
+
+    dbContext.Orders.Remove(order);
+    await dbContext.SaveChangesAsync();
+    return Results.NoContent();
+}).WithOpenApi();
+
+// <---------------------------------------------//////////--------------------------------------------->
+// <---------------------------------------------//////////--------------------------------------------->
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
