@@ -370,42 +370,42 @@ app.MapDelete("/orders/{orderId}", async (ApplicationDbContext dbContext, int or
 app.MapGet("/deliveries", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
     var totalOrders = await dbContext.Deliveries.CountAsync();
-    var orders = await dbContext.Orders
+    var orders = await dbContext.Deliveries
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
     return Utility.CreateResponse<>(totalOrders, orders);
 }).WithOpenApi();
 
-app.MapPost("/orders", async (ApplicationDbContext dbContext, Order order) =>
+app.MapPost("/deliveries", async (ApplicationDbContext dbContext, Delivery delivery) =>
 {
-    dbContext.Orders.Add(order);
+    dbContext.Deliveries.Add(delivery);
     await dbContext.SaveChangesAsync();
-    return Results.Created($"/orders/{order.OrderId}", order);
+    return Results.Created($"/deliveries/{delivery.DeliveryId}", delivery);
 }).WithOpenApi();
 
-app.MapPut("/orders/{orderId}", async (ApplicationDbContext dbContext, int orderId, Order order) =>
+app.MapPut("/deliveries/{deliveryId}", async (ApplicationDbContext dbContext, int deliveryId, Delivery delivery) =>
 {
-    if (orderId != order.OrderId)
+    if (deliveryId != delivery.DeliveryId)
     {
         return Results.BadRequest();
     }
 
-    dbContext.Entry(order).State = EntityState.Modified;
+    dbContext.Entry(delivery).State = EntityState.Modified;
     await dbContext.SaveChangesAsync();
     return Results.NoContent();
 }).WithOpenApi();
 
 
-app.MapDelete("/orders/{orderId}", async (ApplicationDbContext dbContext, int orderId) =>
+app.MapDelete("/deliveries/{deliveryId}", async (ApplicationDbContext dbContext, int deliveryId) =>
 {
-    var order = await dbContext.Orders.FindAsync(orderId);
-    if (order == null)
+    var delivery = await dbContext.Deliveries.FindAsync(deliveryId);
+    if (delivery == null)
     {
         return Results.NotFound();
     }
 
-    dbContext.Orders.Remove(order);
+    dbContext.Deliveries.Remove(delivery);
     await dbContext.SaveChangesAsync();
     return Results.NoContent();
 }).WithOpenApi();
@@ -414,8 +414,3 @@ app.MapDelete("/orders/{orderId}", async (ApplicationDbContext dbContext, int or
 // <---------------------------------------------//////////--------------------------------------------->
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
