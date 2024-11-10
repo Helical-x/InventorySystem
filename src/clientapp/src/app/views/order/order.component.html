@@ -1,1 +1,39 @@
-<p>order works!</p>
+<div>
+    <!-- Botón para agregar una nueva orden -->
+    <div>
+    <button class="btn btn-primary" (click)="newOrder()">Nueva Orden</button>
+    </div>
+
+    <!-- Tabla de órdenes -->
+    <div>
+    <table class="table table-hover table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Order ID</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Order Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Total Amount</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>{{ order.orderId }}</td>
+            <td>{{ order.customerName || 'N/A' }}</td>
+            <td>{{ order.orderDate | date:'short' }}</td>
+            <td>{{ order.status || 'Pending' }}</td>
+            <td>{{ order.totalAmount | currency }}</td>
+            <td>
+            <button class="btn btn-warning" (click)="editOrder(order.orderId)">Editar</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="pagination-container">
+    <mat-paginator [length]="totalOrders" [pageSize]="pageSize" [pageIndex]="pageNumber" (page)="onPageChange($event)"></mat-paginator>
+    </div>
+</div>
