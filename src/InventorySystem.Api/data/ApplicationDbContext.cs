@@ -23,4 +23,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     public DbSet<OrderDetail> OrderDetails { get; set; }
     public DbSet<Transfer> Transfers { get; set; }
     
+    public DbSet<Delivery> Deliveries { get; set; }
+    public DbSet<DeliveryDetail> DeliveryDetails { get; set; }
+    
 }
