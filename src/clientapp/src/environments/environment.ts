@@ -12,6 +12,6 @@ export const environment = {
     order: `${baseURL}order` ,
     delivery: `${baseURL}delivery` ,
     transfer: `${baseURL}transefer` ,
-    inventory: `${baseURL}inventory` ,
+    inventory: `${baseURL}inventories` ,
 
 };
