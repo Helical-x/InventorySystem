@@ -16,10 +16,8 @@ export class ProviderService {
     }
     return this.http.get(environment.provider, {params});
   }
-
-  public getAllProviders():Observable<any> {
-    return this.http.get(environment.provider);
-
+  public getAllCustormers():Observable<any> {
+    return this.http.get(environment.products);
   }
   public findProvider(providerId:number): Observable<any> {
     const URLRequest = `${environment.provider}/${providerId}`;

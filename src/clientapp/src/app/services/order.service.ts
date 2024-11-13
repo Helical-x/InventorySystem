@@ -36,6 +36,5 @@ export class OrderService {
   public editOrder(order: Order): Observable<any> {
     const URLRequest = `${environment.order}/${order.orderId}`;
     return this.http.put(URLRequest, order);
-
   }
 }
