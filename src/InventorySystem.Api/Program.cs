@@ -1,4 +1,5 @@
 using InventorySystem.Api.data;
+using InventorySystem.Api.dtos;
 using InventorySystem.Api.models;
 using InventorySystem.Api.utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,34 +17,17 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configure InMemoryDB for development
-if (builder.Environment.IsDevelopment() || true)
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
-                           throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseInMemoryDatabase(connectionString));
-    // var connectionString = builder.Configuration.GetConnectionString("SqlServerConnection") ??
-    //                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-    // builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    //     options.UseSqlServer(connectionString));
-    
-}
-// Configure MySQL for production
-else
-{
-    var connectionString = builder.Configuration.GetConnectionString("MySqlConnection") ??
-                           throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
+                       throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(connectionString));
 
-}
 
 // Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("inventory", policy => 
+    .AddPolicy("inventory", policy =>
         policy.RequireRole("Api.ReadOnly", "Api.ReadWrite"));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -59,8 +43,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 app.UseHttpsRedirection();
 app.UseCors();
+
 
 app.MapGet("/products", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
@@ -75,7 +66,6 @@ app.MapGet("/products", async (ApplicationDbContext dbContext, int pageNumber = 
             items = products,
             totalItems = totalProducts
         });
-        
 }).WithOpenApi();
 
 app.MapGet("/products/{productId}", async (ApplicationDbContext dbContext, int productId) =>
@@ -116,7 +106,7 @@ app.MapDelete("/products/{productId}", async (ApplicationDbContext dbContext, in
     await dbContext.SaveChangesAsync();
     return Results.NoContent();
 }).WithOpenApi();
-
+/*
 app.MapGet("/inventories", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
     var totalInventories = await dbContext.Inventories.CountAsync();
@@ -132,14 +122,28 @@ app.MapGet("/inventories", async (ApplicationDbContext dbContext, int pageNumber
         });
 }).WithOpenApi();
 
-app.MapPost("/inventories/{productId}/{warehouseId}", async (ApplicationDbContext dbContext, Inventory inventory, int productId, int warehouseId) =>
-{
-    inventory.ProductId = productId;
-    inventory.WarehouseId = warehouseId;
-    dbContext.Inventories.Add(inventory);
-    await dbContext.SaveChangesAsync();
-    return Results.Created($"/inventory/{inventory.InventoryId}", inventory);
-}).WithOpenApi();
+app.MapPost("/inventories",
+    async (ApplicationDbContext dbContext, InventoryDto inventoryDto) =>
+    {
+        var product = await dbContext.Products.FindAsync(inventoryDto.ProductId);
+        var warehouse = await dbContext.Warehouses.FindAsync(inventoryDto.WarehouseId);
+        if (product == null || warehouse == null)
+        {
+            return Results.BadRequest();
+        }
+        var newInventory = new Inventory
+        {
+            ProductId = inventoryDto.ProductId,
+            WarehouseId = inventoryDto.WarehouseId,
+            QuantityAvailable = inventoryDto.QuantityAvailable,
+            MinimumStockLevel = inventoryDto.MinimumStockLevel,
+            MaximumStockLevel = inventoryDto.MaximumStockLevel,
+            ReorderPoint = inventoryDto.ReorderPoint,
+        };
+        dbContext.Inventories.Add(newInventory);
+        await dbContext.SaveChangesAsync();
+        return Results.Created($"/inventory/{newInventory.InventoryId}", newInventory);
+    }).WithOpenApi();
 
 
 app.MapPut("/inventories/{inventoryId}", async (ApplicationDbContext dbContext, int inventoryId, Inventory inventory) =>
@@ -167,7 +171,7 @@ app.MapDelete("/inventories/{inventoryId}", async (ApplicationDbContext dbContex
     await dbContext.SaveChangesAsync();
     return Results.NoContent();
 }).WithOpenApi();
-
+*/
 app.MapGet("/warehouses", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
     var totalWarehouses = await dbContext.Warehouses.CountAsync();
@@ -183,15 +187,16 @@ app.MapGet("/warehouses", async (ApplicationDbContext dbContext, int pageNumber 
         });
 }).WithOpenApi();
 
-app.MapGet("/warehouses/{warehouseId}/products", async (ApplicationDbContext dbContext, int warehouseId, int pageNumber = 1, int pageSize = 10) =>
-{
-    var products = await dbContext.Inventories
-        .Where(i => i.WarehouseId == warehouseId)
-        .Skip((pageNumber - 1) * pageSize)
-        .Take(pageSize)
-        .ToListAsync();
-    return products;
-}).WithOpenApi();
+app.MapGet("/warehouses/{warehouseId}/products",
+    async (ApplicationDbContext dbContext, int warehouseId, int pageNumber = 1, int pageSize = 10) =>
+    {
+        var products = await dbContext.Inventories
+            .Where(i => i.WarehouseId == warehouseId)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+        return products;
+    }).WithOpenApi();
 
 
 app.MapPost("/warehouses", async (ApplicationDbContext dbContext, Warehouse warehouse) =>
@@ -331,11 +336,25 @@ app.MapGet("/orders", async (ApplicationDbContext dbContext, int pageNumber = 1,
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
-    return Utility.CreateResponse<>(totalOrders, orders);
+
+    return Utility.CreateResponse(totalOrders, orders);
+
 }).WithOpenApi();
 
-app.MapPost("/orders", async (ApplicationDbContext dbContext, Order order) =>
+app.MapPost("/orders", async (ApplicationDbContext dbContext, OrderDto orderDto) =>
 {
+    var provider = await dbContext.Providers.FindAsync(orderDto.ProviderId);
+    if (provider == null)
+    {
+        return Results.BadRequest();
+    }
+    
+    var order = new Order
+    {
+        ProviderId = orderDto.ProviderId,
+        OrderDate = orderDto.OrderDate,
+        Provider = provider
+    };
     dbContext.Orders.Add(order);
     await dbContext.SaveChangesAsync();
     return Results.Created($"/orders/{order.OrderId}", order);
@@ -369,16 +388,29 @@ app.MapDelete("/orders/{orderId}", async (ApplicationDbContext dbContext, int or
 
 app.MapGet("/deliveries", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
-    var totalOrders = await dbContext.Deliveries.CountAsync();
-    var orders = await dbContext.Deliveries
+
+    var totalDeliveries = await dbContext.Deliveries.CountAsync();
+    var deliveries = await dbContext.Deliveries
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
-    return Utility.CreateResponse<>(totalOrders, orders);
+    return Utility.CreateResponse(totalDeliveries, deliveries);
 }).WithOpenApi();
 
-app.MapPost("/deliveries", async (ApplicationDbContext dbContext, Delivery delivery) =>
+app.MapPost("/deliveries", async (ApplicationDbContext dbContext, DeliveryDto deliveryDto) =>
 {
+    var customer = await dbContext.Customers.FindAsync(deliveryDto.CustomerId);
+    if (customer == null)
+    {
+        return Results.BadRequest();
+    }
+    
+    var delivery = new Delivery
+    {
+        CustomerId = deliveryDto.CustomerId,
+        SaleDate = deliveryDto.SaleDate,
+        Customer = customer
+    };
     dbContext.Deliveries.Add(delivery);
     await dbContext.SaveChangesAsync();
     return Results.Created($"/deliveries/{delivery.DeliveryId}", delivery);

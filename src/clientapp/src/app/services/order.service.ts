@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Order } from './../models/provider.models'; 
+import { Order } from './../models/provider.models';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from './../../environments/environment';
@@ -9,7 +9,6 @@ export class OrderService {
 
   constructor(private http: HttpClient) { }
 
-  
   public getOrders(pageNumber: number, pageSize: number): Observable<any> {
     const params = {
       'pageNumber': pageNumber.toString(),
@@ -22,7 +21,6 @@ export class OrderService {
     return this.http.get(environment.order);
   }
 
-  
   public findOrder(orderId: number): Observable<any> {
     const URLRequest = `${environment.order}/${orderId}`;
     return this.http.get(URLRequest);

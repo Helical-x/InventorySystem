@@ -6,5 +6,5 @@ public class Warehouse
     public string WarehouseName { get; set; }
     public string WarehouseAddress { get; set; }
     
-    public List<Inventory> Inventories { get; } = new List<Inventory>();
+    public List<Inventory> Inventories { get; } = [];
 }

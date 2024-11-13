@@ -1,5 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace InventorySystem.Api.models;
 
+[Index(nameof(ProductId), nameof(WarehouseId), IsUnique = true)]
 public class Inventory
 {
     public int InventoryId { get; set; }
@@ -10,6 +13,6 @@ public class Inventory
     public int MaximumStockLevel { get; set; }
     public int ReorderPoint { get; set; }
     
-    public Product Product { get; set; }
-    public Warehouse Warehouse { get; set; }
+    public Product Product { get; set; } = null!;
+    public Warehouse Warehouse { get; set; } = null!;
 }
