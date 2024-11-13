@@ -1,1 +1,116 @@
-<p>order works!</p>
+
+<div class="container">
+  <h2>Crear Nueva Orden</h2>
+  <form (ngSubmit)="onSubmit()" #orderForm="ngForm">
+
+    <!-- Selección de Proveedor -->
+    <div class="form-group">
+      <label for="provider">Proveedor</label>
+      <select
+        id="provider"
+        name="provider"
+        class="form-control"
+        [(ngModel)]="order.providerId"
+        required>
+        <option *ngFor="let provider of providers" [value]="provider.providerId">
+          {{ provider.providerName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Fecha de Orden -->
+    <div class="form-group">
+      <label for="orderDate">Fecha de Orden</label>
+      <input
+        type="date"
+        id="orderDate"
+        name="orderDate"
+        class="form-control"
+        [(ngModel)]="order.orderDate"
+        required />
+    </div>
+
+    <hr />
+
+    <!-- Añadir Detalle de Orden -->
+    <h4>Detalles de Orden</h4>
+
+    <!-- Selección de Producto -->
+    <div class="form-group">
+      <label for="product">Producto</label>
+      <select
+        id="product"
+        name="product"
+        class="form-control"
+        [(ngModel)]="newOrderDetail.productId"
+        required>
+        <option *ngFor="let product of products" [value]="product.productId">
+          {{ product.productName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Selección de Almacén -->
+    <div class="form-group">
+      <label for="warehouse">Almacén</label>
+      <select
+        id="warehouse"
+        name="warehouse"
+        class="form-control"
+        [(ngModel)]="newOrderDetail.warehouseId"
+        required>
+        <option *ngFor="let warehouse of warehouses" [value]="warehouse.warehouseId">
+          {{ warehouse.warehouseName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Cantidad -->
+    <div class="form-group">
+      <label for="quantity">Cantidad</label>
+      <input
+        type="number"
+        id="quantity"
+        name="quantity"
+        class="form-control"
+        [(ngModel)]="newOrderDetail.deliveryQuantity"
+        min="1"
+        required />
+    </div>
+
+    <button type="button" class="btn btn-secondary" (click)="addOrderDetail()">Añadir Detalle</button>
+
+    <hr />
+
+    <!-- Lista de Detalles de Orden Añadidos -->
+    <div *ngIf="order.prderDetails?.length">
+      <h4>Detalles Añadidos</h4>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Almacén</th>
+            <th>Cantidad</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let detail of order.prderDetails; let i = index">
+            <td>{{ getProductName(detail.productId) }}</td>
+            <td>{{ getWarehouseName(detail.warehouseId) }}</td>
+            <td>{{ detail.deliveryQuantity }}</td>
+            <td>
+              <button type="button" class="btn btn-danger btn-sm" (click)="removeOrderDetail(i)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Botón de Envío -->
+    <button type="submit" class="btn btn-primary mt-3" [disabled]="!orderForm.form.valid">
+      Crear Orden
+    </button>
+  </form>
+
+</div>
