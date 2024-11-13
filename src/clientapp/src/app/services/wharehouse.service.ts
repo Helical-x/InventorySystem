@@ -27,7 +27,7 @@ export class WarehouseService {
   }
 
   public getInventoryByWarehouseId(warehouseIde:number):Observable<any> {
-    const URLRequest = `${environment.inventory}/warehouse/${warehouseIde}/products`;
+    const URLRequest = `${environment.warehouse}/${warehouseIde}/products`;
     return this.http.get(URLRequest);
   }
 

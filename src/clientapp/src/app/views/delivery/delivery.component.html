@@ -1,1 +1,128 @@
-<p>delivery works!</p>
+<div class="container">
+  <h2>Crear Nuevo Envío</h2>
+  <form (ngSubmit)="onSubmit()" #deliveryForm="ngForm">
+
+    <!-- Selección de Cliente -->
+    <div class="form-group">
+      <label for="customer">Cliente</label>
+      <select
+        id="customer"
+        name="customer"
+        class="form-control"
+        [(ngModel)]="delivery.customerId"
+        required>
+        <option *ngFor="let customer of customers" [value]="customer.customerId">
+          {{ customer.customerName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Fecha de Venta -->
+    <div class="form-group">
+      <label for="saleDate">Fecha de Venta</label>
+      <input
+        type="date"
+        id="saleDate"
+        name="saleDate"
+        class="form-control"
+        [(ngModel)]="delivery.saleDate"
+        required />
+    </div>
+
+    <hr />
+
+    <!-- Añadir Detalle de Envío -->
+    <h4>Detalles del Envío</h4>
+
+    <!-- Selección de Producto -->
+    <div class="form-group">
+      <label for="product">Producto</label>
+      <select
+        id="product"
+        name="product"
+        class="form-control"
+        [(ngModel)]="newDeliveryDetail.productId"
+        required>
+        <option *ngFor="let product of products" [value]="product.productId">
+          {{ product.productName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Selección de Almacén -->
+    <div class="form-group">
+      <label for="warehouse">Almacén</label>
+      <select
+        id="warehouse"
+        name="warehouse"
+        class="form-control"
+        [(ngModel)]="newDeliveryDetail.warehouseId"
+        required>
+        <option *ngFor="let warehouse of warehouses" [value]="warehouse.warehouseId">
+          {{ warehouse.warehouseName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Cantidad -->
+    <div class="form-group">
+      <label for="quantity">Cantidad</label>
+      <input
+        type="number"
+        id="quantity"
+        name="quantity"
+        class="form-control"
+        [(ngModel)]="newDeliveryDetail.deliveryQuantity"
+        min="1"
+        required />
+    </div>
+
+    <!-- Fecha Esperada -->
+    <div class="form-group">
+      <label for="expectedDate">Fecha Esperada</label>
+      <input
+        type="date"
+        id="expectedDate"
+        name="expectedDate"
+        class="form-control"
+        [(ngModel)]="newDeliveryDetail.expectedDate"
+        required />
+    </div>
+
+    <button type="button" class="btn btn-secondary" (click)="addDeliveryDetail()">Añadir Detalle</button>
+
+    <hr />
+
+    <!-- Lista de Detalles de Envío Añadidos -->
+    <div *ngIf="delivery.deliveryDetails?.length">
+      <h4>Detalles Añadidos</h4>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Almacén</th>
+            <th>Cantidad</th>
+            <th>Fecha Esperada</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let detail of delivery.deliveryDetails; let i = index">
+            <td>{{ getProductName(detail.productId) }}</td>
+            <td>{{ getWarehouseName(detail.warehouseId) }}</td>
+            <td>{{ detail.deliveryQuantity }}</td>
+            <td>{{ detail.expectedDate }}</td>
+            <td>
+              <button type="button" class="btn btn-danger btn-sm" (click)="removeDeliveryDetail(i)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Botón de Envío -->
+    <button type="submit" class="btn btn-primary mt-3" [disabled]="!deliveryForm.form.valid">
+      Crear Envío
+    </button>
+  </form>
+</div>

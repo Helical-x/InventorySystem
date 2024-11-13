@@ -47,6 +47,7 @@ export class InventoryComponent implements OnInit {
   }
 
   onWarehouseChange() {
+    console.log("this.selectedWarehouseId: "+this.selectedWarehouseId);
     this.selectedWarehouse = this.warehouses.find(w => w.warehouseId === this.selectedWarehouseId) || null;
     if (this.selectedWarehouseId) {
       this.loadInventoryProducts(this.selectedWarehouseId);
@@ -54,9 +55,10 @@ export class InventoryComponent implements OnInit {
   }
 
   loadInventoryProducts(warehouseId: number) {
+    console.log("loadInventoryProducts::warehouseId: "+warehouseId);
     this.warehouseService.getInventoryByWarehouseId(warehouseId).subscribe(
       response => {
-        this.inventoryProducts = response.inventories;
+        this.inventoryProducts = response;
         this.loadAvailableProducts();
       },
       error => console.error('Error al cargar inventario:', error)
@@ -69,6 +71,8 @@ export class InventoryComponent implements OnInit {
         // Filtramos los productos que no están en el inventario actual
         const products:Product[] = response.items;
         const inventoryProductIds = this.inventoryProducts.map(item => item.product?.productId);
+        console.log("products: "+products);
+        console.log("porductsId: "+inventoryProductIds);
         this.availableProducts = products.filter(product => !inventoryProductIds.includes(product.productId));
       },
       error => console.error('Error al cargar productos:', error)
