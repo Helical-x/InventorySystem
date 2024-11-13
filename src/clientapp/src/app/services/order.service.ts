@@ -9,7 +9,6 @@ export class OrderService {
 
   constructor(private http: HttpClient) { }
 
-
   public getOrders(pageNumber: number, pageSize: number): Observable<any> {
     const params = {
       'pageNumber': pageNumber.toString(),
@@ -21,7 +20,6 @@ export class OrderService {
   public getAllOrders(): Observable<any> {
     return this.http.get(environment.order);
   }
-
 
   public findOrder(orderId: number): Observable<any> {
     const URLRequest = `${environment.order}/${orderId}`;
@@ -36,6 +34,5 @@ export class OrderService {
   public editOrder(order: Order): Observable<any> {
     const URLRequest = `${environment.order}/${order.orderId}`;
     return this.http.put(URLRequest, order);
-
   }
 }

@@ -17,6 +17,7 @@ export class ProviderService {
     return this.http.get(environment.provider, {params});
   }
 
+
   public getAllProviders():Observable<any> {
     return this.http.get(environment.provider);
 

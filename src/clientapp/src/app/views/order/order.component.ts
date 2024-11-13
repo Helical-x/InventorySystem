@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Order, OrderDetail, Provider } from '../../models/provider.models';
@@ -9,9 +8,9 @@ import { OrderService } from '../../services/order.service';
 import { ProviderService } from '../../services/provider.service';
 import { ProductsService } from '../../services/products.service';
 import { WarehouseService } from '../../services/wharehouse.service';
-
 import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+
 
 
 @Component({
@@ -19,15 +18,18 @@ import { HttpClientModule } from '@angular/common/http';
   standalone: true,
   imports: [
 
+
     FormsModule,
     CommonModule,
     HttpClientModule
   ],
   providers: [OrderService,ProviderService,ProductsService,WarehouseService],
+
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss']
 })
 export class OrderComponent implements OnInit {
+
 
   order: Order = {
     orderId: 0,
@@ -120,4 +122,48 @@ export class OrderComponent implements OnInit {
     );
   }
 
+
+  orders: Order[] = [];
+  pageNumber: number = 1;
+  pageSize: number = 10;
+  totalItems: number = 0;
+  totalPages: number = 0;
+
+  constructor(
+    private orderService: OrderService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
+
+  ngOnInit(): void {
+    this.getOrders();
+  }
+
+  public getOrders() {
+    this.orderService.getOrders(this.pageNumber, this.pageSize).subscribe(
+      response => {
+        console.log(response);
+        this.orders = response.items;
+        this.totalItems = response.totalItems;
+        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+      },
+      error => {
+        console.error(error);
+      }
+    );
+  }
+
+  onPageChange(event: any) {
+    console.log(event);
+    this.pageNumber = event.pageIndex;
+    this.getOrders();
+  }
+
+  public newOrder() {
+    this.router.navigate(["new-order"], { relativeTo: this.route });
+  }
+
+  public editOrder(orderId: number) {
+    this.router.navigate([`edit-order/`, orderId], { relativeTo: this.route });
+  }
 }

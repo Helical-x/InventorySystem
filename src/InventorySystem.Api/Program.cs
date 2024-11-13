@@ -336,7 +336,9 @@ app.MapGet("/orders", async (ApplicationDbContext dbContext, int pageNumber = 1,
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
+
     return Utility.CreateResponse(totalOrders, orders);
+
 }).WithOpenApi();
 
 app.MapPost("/orders", async (ApplicationDbContext dbContext, OrderDto orderDto) =>
@@ -386,6 +388,7 @@ app.MapDelete("/orders/{orderId}", async (ApplicationDbContext dbContext, int or
 
 app.MapGet("/deliveries", async (ApplicationDbContext dbContext, int pageNumber = 1, int pageSize = 10) =>
 {
+
     var totalDeliveries = await dbContext.Deliveries.CountAsync();
     var deliveries = await dbContext.Deliveries
         .Skip((pageNumber - 1) * pageSize)
