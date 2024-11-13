@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Order, OrderDetail, Provider } from '../../models/provider.models';
@@ -12,10 +13,12 @@ import { WarehouseService } from '../../services/wharehouse.service';
 import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
+
 @Component({
-  selector: 'app-order',
+  selector: 'app-orders',
   standalone: true,
   imports: [
+
     FormsModule,
     CommonModule,
     HttpClientModule
@@ -116,4 +119,5 @@ export class OrderComponent implements OnInit {
       error => console.error('Error al crear la orden:', error)
     );
   }
+
 }
