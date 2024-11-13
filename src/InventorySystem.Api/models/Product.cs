@@ -1,5 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace InventorySystem.Api.models;
 
+[Index(nameof(ProductName), IsUnique = true)]
 public class Product
 {
     public int ProductId { get; set; }
@@ -13,6 +16,6 @@ public class Product
     public decimal ProductHeight { get; set; }
     public decimal ProductWidth { get; set; }
     public decimal ProductDepth { get; set; }
-
-    public List<Inventory> Inventories { get; } = new List<Inventory>();
+    
+    public List<Inventory> Inventories { get; } = [];
 }
